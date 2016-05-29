@@ -1,0 +1,346 @@
+{% extends "include/base.html" %}
+
+{% block title %}
+	EVE Online Autopilot ETA Calculator
+{% endblock %}
+
+{% block header-scripts %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
+<script type="text/javascript" src="{% static "js/radioCombo.js" %}"></script>
+{% endblock %}
+
+{% block header-styles %}
+<style>
+	#autopilotFields { display: none; padding-left: 20px; }
+	#autopilotFields input { width: 100px; }
+</style>
+{% endblock %}
+
+{% block body %}
+	{% load map_tags %}
+
+	<h1 class="title">EVE Online Autopilot ETA Calculator</h1>
+	<p>This is a utility to help players find routes through the star systems in EVE Online. It can also calculate an ETA for autopiloting that route.</p>
+	<div class="leftColumn">
+		<div class="standardForm">
+			<form method="get" action="">
+				<div class="section">
+					<div class="header">Route</div>
+					<div class="field radioCombo">
+						{{ path_form.origin_type.label_tag }}
+						{% for radio, field in origin_types %}
+							<div class="radioComboEntry radioField">
+								{{ radio }}
+								
+								<div class="text">
+									{{ field }}
+									{% if field.errors %}
+										<div class="field-errors">
+											{{ field.errors }}
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+					
+					<div class="field">
+						{{ path_form.use_midpoints.label_tag }}
+						<div class="inlineInput">
+							{{ path_form.use_midpoints }}
+							{% if path_form.use_midpoints.errors %}
+								<div class="field-errors">
+									{{ path_form.use_midpoints.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					<div id="midpointSection" class="indented">
+						<div class="field">
+							Midpoints - <a href="{% url 'maps.manage_waypoints' %}">Manage Midpoints</a>
+							<ol class="waypointList">
+								{% for item in waypoint_list %}
+									<li>{{ item.name }}</li>
+								{% empty %}
+									<span class="no-results">No midpoints set</span>
+								{% endfor %}
+							</ol>
+						</div>
+						{% comment %}
+						<div class="field">
+							{{ path_form.optimize_midpoints.label_tag }}
+							<div class="inlineInput">
+								{{ path_form.optimize_midpoints }}
+								{% if path_form.optimize_midpoints.errors %}
+									<div class="field-errors">
+										{{ path_form.optimize_midpoints.errors }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+						{% endcomment %}
+					</div>
+					
+					<div class="field radioCombo">
+						{{ path_form.destination_type.label_tag }}
+						{% if path_form.destination_type.errors %}
+							<div class="field-errors">
+								{{ path_form.destination_type.errors }}
+							</div>
+						{% endif %}
+						{% for radio, data in destination_types %}
+							<div class="radioComboEntry radioField">
+								{{ radio }} {% if data.waypoint_field %} - {% endif %}
+								<div class="text">
+									{{ data.field }}
+									{% if data.field.errors %}
+										<div class="field-errors">
+											{{ data.field.errors }}
+										</div>
+									{% endif %}
+								</div>
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+				
+				<div class="section">
+					<div class="header">Avoidance</div>
+					<div class="field">
+						{{ path_form.avoid_lowsec.label_tag }}
+						<div class="inlineInput">
+							{{ path_form.avoid_lowsec }}
+							{% if path_form.avoid_lowsec.errors %}
+								<div class="field-errors">
+									{{ path_form.avoid_lowsec.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					<div class="field">
+						{{ path_form.maximum_security.label_tag }}
+						<div class="inlineInput">
+							{{ path_form.maximum_security }}
+							{% if path_form.maximum_security.errors %}
+								<div class="field-errors">
+									{{ path_form.maximum_security.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					<div class="field">
+						{{ path_form.avoid_systems.label_tag }}
+						<div class="nextLineInput">
+							{{ path_form.avoid_systems }}
+							{% if path_form.avoid_systems.errors %}
+								<div class="field-errors">
+									{{ path_form.avoid_systems.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					<div class="field">
+						{{ path_form.avoid_regions.label_tag }}
+						<div class="nextLineInput">
+							{{ path_form.avoid_regions }}
+							{% if path_form.avoid_regions.errors %}
+								<div class="field-errors">
+									{{ path_form.avoid_regions.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+				
+				<div class="section">
+					<div class="header">ETA</div>
+					<div class="field">
+						{{ path_form.compute_travel_time.label_tag }}
+						<div class="inlineInput">
+							{{ path_form.compute_travel_time }}
+							{% if path_form.compute_travel_time.errors %}
+								<div class="field-errors">
+									{{ path_form.compute_travel_time.errors }}
+								</div>
+							{% endif %}
+						</div>
+					</div>
+					
+					<div id="travelTimeFields">
+						<div class="field">
+							{{ path_form.autopilot.label_tag }}
+							<div class="inlineInput">
+								{{ path_form.autopilot }}
+								{% if path_form.autopilot.errors %}
+									<div class="field-errors">
+										{{ path_form.autopilot.errors }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+						<div class="field">
+							{{ path_form.align_time.label_tag }}
+							<div class="nextLineInput">
+								{{ path_form.align_time }}<span class="unitLabel">seconds</span>
+								{% if path_form.align_time.errors %}
+									<div class="field-errors">
+										{{ path_form.align_time.errors }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+						<div class="field">
+							{{ path_form.warp_speed.label_tag }}
+							<div class="nextLineInput">
+								{{ path_form.warp_speed }}<span class="unitLabel">AU/s</span>
+								{% if path_form.warp_speed.errors %}
+									<div class="field-errors">
+										{{ path_form.warp_speed.errors }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+						<div class="field">
+							{{ path_form.ship_speed.label_tag }}
+							<div class="nextLineInput">
+								{{ path_form.ship_speed }}<span class="unitLabel">m/s</span>
+								{% if path_form.ship_speed.errors %}
+									<div class="field-errors">
+										{{ path_form.ship_speed.errors }}
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<input type="submit" class="button" value="Search" />
+			</form>
+		</div>
+	</div>
+	
+	
+	<div class="fillColumn">
+		{% if path == None %}
+			<p>Fill out the form to the left to find the shortest path between two places.</p>
+			
+			<p>To compute travel time, check the "Compute travel time" box and enter your ship's information.</p>
+			
+			<h3>Avoidance</h3>
+			<ul>
+				<li>To avoid low security systems, check the "avoid lowsec" box. It will still consider lowsec routes, but it will consider them much less desirable (the same way eve does it).</li>
+				<li>To avoid systems above a certain security, use the "Avoid Security >" dropdown. It will still consider routes with these systems, but it will consider them much less desirable (the same way eve does it).</li>
+				<li>To avoid specific systems or regions, enter their names, separated by commas, in the "Avoid systems" and "Avoid regions" fields respectively.</li>
+			</ul>
+		{% else %}
+			<div class="systemTable">
+				<div class="header">
+					<span class="title">Shortest Path: {{ path_length }} Jump{{ path_length|pluralize }}</span>
+					{% if path_time %}
+						<span class="title">Total Travel Time: {{ path_time|format_seconds }} (+/- {{ path_error|format_seconds }})</span>
+					{% endif %}
+				</div>
+				<table>
+					<thead>
+						<tr>
+							<td>Security</td>
+							<td>System</td>
+							<td>Constellation</td>
+							<td>Region</td>
+							{% if path_time %}
+								<td>Travel Time</td>
+							{% endif %}
+						<tr>
+					</thead>
+					<tbody>
+						{% for waypoint in path %}
+							{% for entry in waypoint.path %}
+								<tr>
+									<td class="{{ entry.security_level|securityClass }}">{{ entry.security_level|floatformat:1 }}</td>
+									<td>{{ entry.location }}</td>
+									<td>{{ entry.constellation}}</td>
+									<td>{{ entry.region }}</td>
+									{% if path_time %}
+										<td>{{ entry.travel_time|format_seconds }}</td>
+									{% endif %}
+								</tr>
+							{% endfor %}
+							<tr class="waypointRow">
+								<td colspan="99">
+									{% if waypoint.path|length == 0 %}
+										No path found - Waypoint {{ forloop.counter }}: {{ waypoint.name }} ({{ waypoint.type }})
+									{% elif waypoint.path|length == 1 %}
+										Already at waypoint {{ forloop.counter }}: {{ waypoint.name }} ({{ waypoint.type }})
+									{% else %}
+										Waypoint {{ forloop.counter }}: {{ waypoint.name }} ({{ waypoint.type }}) - {{ waypoint.jumps }} Jumps{% if path_time %} - {{ waypoint.time|format_seconds }} (+/- {{ waypoint.error|format_seconds }}){% endif %}
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %} 
+					</tbody>
+				</table>
+			</div>
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block body-scripts %}
+	<script type="text/javascript">
+	
+		$(document).ready(function() {
+			//set up autocomplete
+			system_options = { serviceUrl:"{% url 'static_dump.system_name_autocomplete' %}", minChars:2 };
+			station_options = { serviceUrl:"{% url 'static_dump.station_name_autocomplete' %}", minChars:3, width:400 };
+			region_options = { serviceUrl:"{% url 'static_dump.region_name_autocomplete' %}", minChars:2 };
+			$('#id_origin_system').autocomplete(system_options);
+			$('#id_destination_system').autocomplete(system_options);
+			
+			$('#id_origin_station').autocomplete(station_options);
+			$('#id_destination_station').autocomplete(station_options);
+			
+			$('#id_destination_region').autocomplete(region_options);
+			
+			//set up show/hide midpoint fields
+			$('#id_use_midpoints').on('change', function(ev) {
+				if($(ev.currentTarget).prop('checked')) {
+					$('#midpointSection').slideDown();
+				}
+				else {
+					$('#midpointSection').slideUp();
+				}
+				
+				return false;
+			});
+			if($('#id_use_midpoints').prop('checked')) {
+				$('#midpointSection').show();
+			}
+			else {
+				$('#midpointSection').hide();
+			}
+			
+			//set up show/hide autopilot fields
+			$('#id_compute_travel_time').on('change', function(ev) {
+				if($(ev.currentTarget).prop('checked')) {
+					$('#travelTimeFields').slideDown();
+				}
+				else {
+					$('#travelTimeFields').slideUp();
+				}
+				
+				return false;
+			});
+			if($('#id_compute_travel_time').prop('checked')) {
+				$('#travelTimeFields').show();
+			}
+			else {
+				$('#travelTimeFields').hide();
+			}
+		});
+		
+	</script>
+	
+{% endblock %}

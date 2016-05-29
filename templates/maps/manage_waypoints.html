@@ -1,0 +1,181 @@
+{% extends "include/base.html" %}
+
+{% block title %}
+	Manage Waypoints - EVE Online Autopilot ETA Calculator
+{% endblock %}
+
+{% block header-scripts %}
+{% load staticfiles %}
+<script type="text/javascript" src="{% static "js/jquery.cookie.js" %}"></script>
+<script type="text/javascript" src="{% static "js/jquery.autocomplete.js" %}"></script>
+<script type="text/javascript" src="{% static "js/radioCombo.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+	
+	<h1 class="title">Autopilot ETA Calculator - Manage Waypoints</h1>
+	<div class="waypointTable">
+		<table id="waypointTable">
+			<thead>
+				<tr>
+					<td>#</td>
+					<td>Security</td>
+					<td>Destination</td>
+					<td></td>
+				</tr>
+			</tr>
+			<tbody>
+				{% for point in waypoint_list %}
+					{% include "include/waypoint_entry.html" with num=forloop.counter point=point only%}
+				{% endfor %}
+			</tbody>
+		</table>
+		{% if waypoint_list|length == 0 %}
+			<span class="no-results">No waypoints set</span>
+		{% endif %}
+	</div>
+	<div class="buttons">
+		<a href="#" id="addWaypointButton" class="button" role="button">Add Waypoint</a>
+		<a href="#" id="saveWaypointsButton" class="button">Save Waypoints</a>
+		<a href="{% url 'maps.shortest_path' %}" class="button">Cancel</a>
+	</div>
+	<div id="saveError" class="errorList"></div>
+{% endblock %}
+{% block dialogs %}
+	<div id="addWaypointDialog" class="dialog">
+		<form id="waypointForm" method="get" action="">
+			<div id="waypointFormContainer" class="standardForm">
+				{{ waypoint_form_str|safe }}
+			</div>
+		</form>
+	</div>
+{% endblock %}
+
+{% block body-scripts %}
+<script type="text/javascript">
+	
+	var addWaypoint = function() {
+		
+		//send the form to the server
+		$("body").addClass("waiting");
+		jQuery.get(
+			"{% url 'maps.add_waypoint' %}",
+			$("#waypointForm").serialize()
+		).done(function(data, textStatus, jqXHR) {
+			var result = JSON.parse(data);
+			if(result.success) {
+				$("#waypointTable .no-results").remove();
+				$("#waypointTable > tbody:last").append(result.response);
+				renumberWaypoints();
+			}
+			else {
+				$("#waypointFormContainer").html(result.response);
+				setupWaypointForm();
+			}
+		}).always(function() {
+			$("body").removeClass("waiting");
+		});
+	};
+	
+	var renumberWaypoints = function() {
+		$("#waypointTable .waypointEntry").each(function(i,e) {
+			$(e).find(".numberCol").text(i + 1);
+		});
+	}
+	
+	var setupWaypointForm = function() {
+		setupRadioCombo($("#waypointFormContainer .radiocombo"));
+		
+		//set up autocomplete
+		system_options = { serviceUrl:"{% url 'static_dump.system_name_autocomplete' %}", minChars:2, width: 150 };
+		station_options = { serviceUrl:"{% url 'static_dump.station_name_autocomplete' %}", minChars:3, width:400 };
+		region_options = { serviceUrl:"{% url 'static_dump.region_name_autocomplete' %}", minChars:2, width: 150 };
+		$('#id_destination_system').autocomplete(system_options);
+		$('#id_destination_station').autocomplete(station_options);
+		$('#id_destination_region').autocomplete(region_options);
+	}
+
+
+
+	$(document).ready(function() {
+		//set up "add waypoint" dialog
+		$("#addWaypointDialog").dialog({
+			title:"Add Waypoint",
+			buttons: {Add:addWaypoint,Close:function(){$(this).dialog("close")}},
+			});
+		$("#addWaypointButton").on("click",function() {
+			$("#addWaypointDialog").dialog("open");
+			return false;
+		});
+		
+		setupWaypointForm();
+		
+		//set up redordering for table rows
+		$("#waypointTable tbody").sortable({
+			items:"> .waypointEntry", 
+			opacity: 0.75,
+			placeholder: "waypointPlaceholder",
+			
+			start: function(event, ui) {
+				ui.placeholder.html('<td colspan="4"><div>&nbsp;</div></td>');
+				},
+			update:renumberWaypoints,
+		});
+		
+		//remove click handlers
+		$("#waypointTable").on("click",".removeLink", function(ev) {
+			var row = $(ev.currentTarget).closest(".waypointEntry");
+			var complete = false;
+			row.find('div').slideUp("fast",function() {
+				if(!complete) {
+					complete = true;
+					row.remove();
+					renumberWaypoints();
+				}
+			});
+			return false;
+		});
+		
+		//save click handler
+		$("#saveWaypointsButton").on("click", function() {
+			
+			var waypoints = [];
+			
+			$("#waypointTable .waypointEntry").each(function(i,e) {
+				waypoints.push({type:$(e).attr("data-type"), id:$(e).attr("data-id")});
+			});
+			
+			var waypoint_str = JSON.stringify(waypoints);
+			
+			$("body").addClass("waiting");
+			jQuery.post(
+				"{% url 'maps.save_waypoints' %}",
+				{waypoints: waypoint_str}
+			).done(function(data, textStatus, jqXHR) {
+				var result = JSON.parse(data);
+				if(result.success) {
+					window.location.href = result.response
+				}
+				else {
+					$("#saveError").text("There was an error saving the waypoints. Please refresh the page and try again.");
+				}
+				
+			}).always(function() {
+				$("body").removeClass("waiting");
+			});
+			
+			return false;
+		});
+		
+		//add csrf cookie to header
+		var csrftoken = $.cookie('csrftoken');
+		$.ajaxSetup({
+			beforeSend: function(xhr, settings) {
+				if (settings.type == 'POST') {
+					xhr.setRequestHeader("X-CSRFToken", csrftoken);
+				}
+			}
+		});
+    });
+</script>
+{% endblock %}

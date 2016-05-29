@@ -1,0 +1,13 @@
+{% extends "include/base.html" %}
+
+{% block title %}Eve Utils{% endblock %}
+
+{% block body %}
+	<h1>Eve-utils.net</h1>
+	<p>This web site hosts unique tools to help simplify tasks in the PC game EVE Online.</p>
+	<p>At the moment we have the following tools:</p>
+	<ul>
+		<li><a href="{% url 'maps.shortest_path' %}">Autopilot ETA Calculator</a> - Find the shortest route from your origin to your destination, and get an estimation of the time needed to travel that route
+	</ul>
+	<p>If you have a suggestion for a new and unique utility, or an improvement to an existing one, please post in the <a href="https://forums.eveonline.com/default.aspx?g=posts&t=185155">official forum thread</a>.</p>
+{% endblock %}

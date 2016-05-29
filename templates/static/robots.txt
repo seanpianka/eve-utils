@@ -1,0 +1,7 @@
+#disallow ajax URLs
+User-agent: *
+Disallow: /maps/system_name_autocomplete/
+Disallow: /maps/station_name_autocomplete/
+Disallow: /maps/region_name_autocomplete/
+Disallow: /maps/waypoints/add/
+Disallow: /maps/waypoints/save/

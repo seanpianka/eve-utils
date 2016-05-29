@@ -1,0 +1,19 @@
+{% spaceless %}
+<div class="field radioCombo">
+	{{ path_form.destination_type.label_tag }}
+	{% for radio, field in destination_types %}
+		<div class="radioComboEntry radioField">
+			{{ radio }}
+			
+			<div class="text">
+				{{ field }}
+				{% if field.errors %}
+					<div class="field-errors">
+						{{ field.errors }}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	{% endfor %}
+</div> 
+{% endspaceless %}

@@ -1,0 +1,9 @@
+{% spaceless %}
+{% load map_tags %}
+<tr class="waypointEntry" data-type="{{ point.type }}" data-id="{{ point.id }}">
+	<td><div class="numberCol">{{ num }}</div></td>
+	<td><div class="securityCol {{ point.security|securityClass }}">{{ point.security|floatformat:1|default:"-" }}</div></td>
+	<td><div class="destinationCol">{{ point.name }}&nbsp;</div></td>
+	<td><div class="removeCol"><a href="#" class="removeLink">Remove</a></div></td>
+</tr>
+{% endspaceless %}

@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+	<head>
+		<title>{% block title %}Undefined Title{% endblock %}</title>
+		<meta name="msvalidate.01" content="F46DC837BACE465F36D07CC38855A894" />
+		
+		<link rel="shortcut icon" href="{% static "img/favicon.ico" %}" />
+		<link rel="apple-touch-icon" href="{% static "img/apple-touch-icon.png" %}" />
+		
+		<link href="{% static "css/ui-darkness/jquery-ui-1.10.0.custom.min.css" %}" rel="stylesheet" />
+		<link href="{% static "css/main.css" %}" rel="stylesheet" />
+		{% block header-styles %}{% endblock %}
+		
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.1/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		{% block header-scripts %}{% endblock %}
+		
+		<script type="text/javascript">
+			$(document).ready(function() {
+				
+				//set up jquery ui defaults
+				$.extend($.ui.dialog.prototype.options, {
+					modal: true,
+					resizable: false,
+					draggable: false,
+					autoOpen: false,
+					show: "fade",
+					hide: "fade",
+				});
+			});
+		</script>
+	</head>
+	<body>
+		
+		<div id="outer">
+			<div id="body">
+				<div id="content">
+					{% block body %}Undefined Body{% endblock %}
+				</div>
+			</div>
+		</div>
+		{% block dialogs %}{% endblock %}
+		{% block body-scripts %}{% endblock %}
+	</body>
+</html>

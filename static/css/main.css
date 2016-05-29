@@ -1,0 +1,459 @@
+
+body {
+	background-color: #222;
+}
+body.waiting {
+	cursor:wait;
+}
+
+#outer {
+	width: 1200px;
+	margin: 0 auto;
+	-moz-box-shadow: 0px 0px 5px black;
+	-webkit-box-shadow: 0px 0px 5px black;
+	box-shadow: 0px 0px 5px black;
+}
+	
+#body {
+	background-color: black;
+	color: #ccc;
+}
+
+#content {
+	padding: 10px;
+	padding-top:0px;
+	padding-bottom: 20px;
+	
+	display: block;
+	overflow: hidden;
+}
+
+
+.title {
+	color: #FFF;
+}
+
+/* The following two syles support a system where there is a column with a form on the left, 
+	and an area that fills the remaining space on the right.
+	The envisioned use case is a search form on the left and results of the search on the right 
+ */
+ 
+.leftColumn {
+	width: 250px;
+	float: left;
+	border-right: 1px dotted #888;
+	padding-right: 5px;
+}
+
+.fillColumn {
+	overflow:auto;
+	
+	padding: 5px;
+	padding-left: 10px;
+	min-height: 200px;
+}
+
+
+/* buttons and links */
+a:link {
+	color: #da4;
+}
+a:visited {
+	color: #da4;
+}
+a:hover {
+	color: #fd6;
+}
+
+.buttons {
+	margin: 20px;
+}
+
+.button {
+	padding: 5px 10px;
+	border-radius: 5px;
+	border: none;
+	color: white;
+	cursor: pointer;
+	
+	background-image:         linear-gradient(bottom, #222 0%,  #777 70%);
+	background-image:     -ms-linear-gradient(bottom, #222 0%,  #777 70%);
+	background-image:    -moz-linear-gradient(bottom, #222 0%,  #777 70%);
+	background-image: -webkit-linear-gradient(bottom, #222 0%,  #777 70%);
+	background-color: #333;
+}
+.button:link { text-decoration: none; color: white; }
+.button:visited { text-decoration: none; color: white;}
+.button:active {
+	background-image:         linear-gradient(bottom, #111 0%,  #666 70%);
+	background-image:     -ms-linear-gradient(bottom, #111 0%,  #666 70%);
+	background-image:    -moz-linear-gradient(bottom, #111 0%,  #666 70%);
+	background-image: -webkit-linear-gradient(bottom, #111 0%,  #666 70%);
+}
+
+
+
+
+/* styles for form input */
+.standardForm .field {
+	clear: both;
+	margin-bottom: 10px;
+	padding-right: 5px;
+}
+
+.standardForm .radioField {
+	clear: both;
+	margin-bottom: 5px;	
+}
+
+
+.radioCombo .text {
+	padding-left: 20px;
+}
+
+.standardForm .field label {
+}
+
+.standardForm .field .inlineInput {
+		display: inline-block;
+}
+.standardForm .field .nextLineInput {
+		display: block;
+}
+
+.standardForm .field input[type=text], .standardForm .field textarea {
+	border: 1px solid #666;
+	background-color: #181818;
+	color: #ddd;
+}
+
+.standardForm .field input[type=text]:disabled, .standardForm .field textarea:disabled {
+	background-color: #383838;
+	color: #999;
+}
+
+.standardForm .field input {
+	width: auto;
+}
+
+.standardForm .field textarea {
+	width: 100%;
+	height: 60px;
+	font-family: Arial, sans-serif;
+}
+
+.standardForm .indented {
+	margin-left: 10px;
+}
+
+
+.errorList {
+	margin: 0px;
+	padding-left: 15px;
+	color: #E33;
+}
+
+.standardForm .unitLabel {
+	padding-left: 5px;
+	font-size: 90%;
+}
+
+/* align inline checkboxes correctly */
+.standardForm .inlineInput input[type="checkbox"] {
+	margin-bottom: -3px;
+}
+
+/* Grouping sections of a page */
+.section {
+	background-color: #111;
+	margin-bottom: 10px;
+	margin-right:5px;
+	padding: 5px;
+	border-radius:5px;
+}
+.section .header {
+	color:white;
+	
+	font-size: 120%;
+	font-weight:bold;
+	margin-bottom: 10px;
+	margin-left: 5px;
+}
+
+
+/* styles for solar system tables */
+.systemTable {
+	width: 100%;
+	
+	border: 1px solid #555;
+	-moz-box-shadow: 0px 0px 3px #555;
+	-webkit-box-shadow: 0px 0px 3px #555;
+	box-shadow: 0px 0px 3px #555;
+}
+
+.systemTable .header {
+	background-image:         linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image:     -ms-linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image:    -moz-linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image: -webkit-linear-gradient(bottom, #000 0%,  #444 100%);
+	
+	font-size: 16px;
+	padding: 10px;
+}
+
+.systemTable .title {
+	padding-right: 20px;
+}
+
+.systemTable table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+	color: #ccc;
+	
+	width: 100%;
+	
+	background-color: black;
+}
+
+.systemTable thead {
+	font-size: 16px;
+	color: #FFF;
+}
+
+.systemTable thead td {
+	padding: 3px 8px;
+	border-bottom: 1px solid #444;
+}
+
+
+.systemTable tbody td {
+	border-bottom: 1px solid #222;
+	padding: 1px 5px;
+}
+
+.systemTable tbody tr:last-child td{
+	border-bottom: 0px none;
+}
+
+.systemTable .waypointRow td {
+	text-align: center;
+	padding: 10px;
+	background-color: #111;
+}
+
+
+/* styles for the waypoint list tables */
+.waypointTable {
+	width: auto;
+}
+
+.waypointTable .header {	
+	background-image:         linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image:     -ms-linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image:    -moz-linear-gradient(bottom, #000 0%,  #444 100%);
+	background-image: -webkit-linear-gradient(bottom, #000 0%,  #444 100%);
+	
+	font-size: 16px;
+	padding: 10px;
+}
+
+.waypointTable .title {
+	padding-right: 20px;
+}
+
+.waypointTable table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+	color: #ccc;
+	
+	background-color: black;
+}
+
+.waypointTable thead td {
+	padding: 3px 20px;
+	border-bottom: 1px solid #444;
+}
+
+.waypointTable tbody td {
+	margin:0;
+	padding:0;
+	border: none;
+}
+
+.waypointTable tbody > .waypointEntry > td > div.numberCol{
+	width:20px;
+}
+.waypointTable tbody > .waypointEntry > td > div.securityCol{
+	width:60px;
+}
+.waypointTable tbody > .waypointEntry > td > div.destinationCol{
+	width:475px;
+}
+.waypointTable tbody > .waypointEntry > td > div.removeCol{
+	width:60px;
+}
+
+.waypointTable tbody > .waypointEntry > td > div{
+	background-color: #222;
+	margin: 5px 0;
+	padding: 8px 20px;
+	
+	background-image:         linear-gradient(bottom, #111 0%,  #444 100%);
+	background-image:     -ms-linear-gradient(bottom, #111 0%,  #444 100%);
+	background-image:    -moz-linear-gradient(bottom, #111 0%,  #444 100%);
+	background-image: -webkit-linear-gradient(bottom, #111 0%,  #444 100%);
+	
+	border-top: 1px solid black;
+	border-bottom: 1px solid #333;
+	
+	cursor: pointer;
+}
+
+.waypointTable tbody > .waypointEntry > td:first-child > div {
+	border-top-left-radius:10px;
+	border-bottom-left-radius:10px;
+}
+
+.waypointTable tbody > .waypointEntry > td:last-child > div {
+	border-top-right-radius:10px;
+	border-bottom-right-radius:10px;
+}
+
+.waypointTable tbody > .waypointPlaceholder > td > div {
+	margin: 5px 0;
+	padding: 8px 20px;
+	
+	border: 1px solid #333;
+	border-radius: 10px;
+}
+
+.waypointTable a.removeLink:link {
+	color: #ddd;
+}
+.waypointTable a.removeLink:visited {
+	color: #ddd;
+}
+.waypointTable a.removeLink:hover {
+	color: #fff;
+}
+
+.waypointList {
+	margin: 5px 0px;
+	padding: 0px 20px;
+}
+
+
+
+
+/* styles for displaying system security status */
+.securityOne {
+	color: #0FF;
+}
+
+.pointNine {
+	color: #0FA;
+}
+
+.pointEight {
+	color: #0F5;
+}
+
+.pointSeven {
+	color: #0F0;
+}
+
+.pointSix {
+	color: #AF0;
+}
+
+.pointFive {
+	color: #FF0;
+}
+
+.pointFour {
+	color: #FA0;
+}
+
+.pointThree {
+	color: #F80;
+}
+
+.pointTwo {
+	color: #F60;
+}
+
+.pointOne {
+	color: #F40;
+}
+
+.securityZero {
+	color: #F00;
+}
+
+
+
+
+
+
+/* styles for the autocomplete thing */
+.autocomplete {
+	background-color: #222;
+	color:white;
+	overflow:auto;
+	
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+	
+	border:1px solid #aaa;
+	padding: 3px 5px;
+	
+	-moz-box-shadow: 0px 0px 8px #aaa;
+	-webkit-box-shadow: 0px 0px 8px #aaa;
+	box-shadow: 0px 0px 8px #aaa;
+	
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+}
+
+.autocomplete .selected {
+	background-color: #444;
+}
+
+.autocomplete strong {
+	font-weight: normal;
+	color: #59f;
+}
+
+/* styles for dialogs */
+.dialog {
+	display: none;
+}
+
+/* misc */
+.no-results {
+	color: #888;
+	font-style: italic;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
