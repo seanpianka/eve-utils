@@ -10,73 +10,111 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='GraphEdge',
+            name="GraphEdge",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('distance', models.FloatField(null=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("distance", models.FloatField(null=True)),
             ],
         ),
         migrations.CreateModel(
-            name='GraphNode',
+            name="GraphNode",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
             ],
         ),
         migrations.CreateModel(
-            name='MapConstellation',
+            name="MapConstellation",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(db_index=True, max_length=100)),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(db_index=True, max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='MapRegion',
+            name="MapRegion",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=100)),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=100)),
             ],
         ),
         migrations.CreateModel(
-            name='MapSolarSystem',
+            name="MapSolarSystem",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=100)),
-                ('security_level', models.FloatField()),
-                ('constellation', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_dump.MapConstellation')),
-                ('region', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_dump.MapRegion')),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(max_length=100)),
+                ("security_level", models.FloatField()),
+                (
+                    "constellation",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="static_dump.MapConstellation",
+                    ),
+                ),
+                (
+                    "region",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="static_dump.MapRegion",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Station',
+            name="Station",
             fields=[
-                ('id', models.IntegerField(primary_key=True, serialize=False)),
-                ('name', models.CharField(db_index=True, max_length=100)),
-                ('system', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_dump.MapSolarSystem')),
+                ("id", models.IntegerField(primary_key=True, serialize=False)),
+                ("name", models.CharField(db_index=True, max_length=100)),
+                (
+                    "system",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="static_dump.MapSolarSystem",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='mapconstellation',
-            name='region',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_dump.MapRegion'),
+            model_name="mapconstellation",
+            name="region",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="static_dump.MapRegion"
+            ),
         ),
         migrations.AddField(
-            model_name='graphnode',
-            name='system',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='static_dump.MapSolarSystem'),
+            model_name="graphnode",
+            name="system",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="static_dump.MapSolarSystem",
+            ),
         ),
         migrations.AddField(
-            model_name='graphedge',
-            name='destination',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='edge_destinations', to='static_dump.GraphNode'),
+            model_name="graphedge",
+            name="destination",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="edge_destinations",
+                to="static_dump.GraphNode",
+            ),
         ),
         migrations.AddField(
-            model_name='graphedge',
-            name='origin',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='edge_origins', to='static_dump.GraphNode'),
+            model_name="graphedge",
+            name="origin",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="edge_origins",
+                to="static_dump.GraphNode",
+            ),
         ),
     ]

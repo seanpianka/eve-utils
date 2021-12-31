@@ -19,14 +19,15 @@ from django.views.generic.base import TemplateView
 from django.conf.urls.static import static
 
 urlpatterns = [
-	#static files
-	url(r'^robots\.txt$', TemplateView.as_view(template_name='static/robots.txt')),
-	url(r'^sitemap\.txt$', TemplateView.as_view(template_name='static/sitemap.txt')),
-	url(r'^googlefffb464ff0a5129c\.html',TemplateView.as_view(template_name='static/googlefffb464ff0a5129c.html')),
-	
-	url(r'^maps/', include('maps.urls')),
-	url(r'^static_dump/', include('static_dump.urls')),
-	
-	#root url
-	url(r'^$', TemplateView.as_view(template_name='index.html')),
+    # static files
+    url(r"^robots\.txt$", TemplateView.as_view(template_name="static/robots.txt")),
+    url(r"^sitemap\.txt$", TemplateView.as_view(template_name="static/sitemap.txt")),
+    url(
+        r"^googlefffb464ff0a5129c\.html",
+        TemplateView.as_view(template_name="static/googlefffb464ff0a5129c.html"),
+    ),
+    url(r"^maps/", include("maps.urls")),
+    url(r"^static_dump/", include("static_dump.urls")),
+    # root url
+    url(r"^$", TemplateView.as_view(template_name="index.html")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

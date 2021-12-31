@@ -8,28 +8,28 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('static_dump', '0001_initial'),
+        ("static_dump", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='mapconstellation',
-            name='name',
+            model_name="mapconstellation",
+            name="name",
             field=models.CharField(max_length=100, unique=True),
         ),
         migrations.AlterField(
-            model_name='mapregion',
-            name='name',
+            model_name="mapregion",
+            name="name",
             field=models.CharField(max_length=100, unique=True),
         ),
         migrations.AlterField(
-            model_name='mapsolarsystem',
-            name='name',
+            model_name="mapsolarsystem",
+            name="name",
             field=models.CharField(max_length=100, unique=True),
         ),
         migrations.AlterField(
-            model_name='station',
-            name='name',
+            model_name="station",
+            name="name",
             field=models.CharField(max_length=100, unique=True),
         ),
     ]
